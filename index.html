@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>iMapViewer</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <script src="js/jquery-3.3.1.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/plotly-latest.min.js"></script>
+  <!--script src="js/plotly-gl2d-latest.min.js"></script-->
+  <style>
+  #map-warp {
+  
+  }
+  #map-view {
+    position: absolute;
+    top: 400px;
+  }
+  #map-warp svg {
+    -webkit-clip-path: circle(30px at center);
+  }
+  #map-view svg {
+    -webkit-clip-path: circle(150px at center);
+  }
+  div.map {
+    float: left;
+    -webkit-transition: 0.2s;
+    transition: 0.2s;
+    z-index: 0;
+  }
+  /*
+  div.map:hover {
+    transform: scale(2);
+    z-index: 999;
+  }
+  */
+  </style>
+</head>
+
+<body>
+ 
+<div id="map-warp">
+</div>
+
+<div class="float-none"></div>
+
+<div id="map-view">
+</div>
+
+<script>
+var d3 = Plotly.d3;
+
+var size = 30;
+var r = size / 2;
+var x = new Array(size);
+var y = new Array(size);
+var z = new Array(size);
+
+for(let i = 0; i < size; i++) {
+    x[i] = y[i] = -(r/2) * Math.PI + r * Math.PI * i / size;
+    z[i] = new Array(size);
+}
+
+for(let i = 0; i < size; i++) {
+    for(let j = 0; j < size; j++) {
+        ii = i - r;
+        jj = j - r;
+        if ((ii*ii + jj*jj) > r*r) {
+            z[i][j] = NaN;
+        } else {
+            z[i][j] = i * j;
+        }
+    }
+}
+
+var data = [{
+    z: z,
+    //x: x,
+    //y: y,
+    type: 'contour',
+    showscale: false,
+    connectgaps: true,
+    zsmooth: 'best',
+    contours: {
+        coloring: 'heatmap'
+    },
+    colorscale: [
+        [0.00, 'rgb(255,000,255)'],
+        [0.13, 'rgb(128,000,255)'],
+        [0.33, 'rgb(000,128,255)'],
+        [0.50, 'rgb(000,255,000)'],
+        [0.66, 'rgb(255,255,000)'],
+        [0.83, 'rgb(255,128,000)'],
+        [1.00, 'rgb(255,000,000)']
+    ],
+    line: {
+        width: 0
+    }
+}];
+
+var layout = {
+    width: 60,
+    height: 60,
+    margin: {
+        l: 0, r: 0, t: 0, b: 0
+    },
+    xaxis: {
+        showgrid: false,
+        zeroline: false,
+        showline: false,
+        autotick: false,
+        ticks: '',
+        showticklabels: false
+    },
+    yaxis: {
+        showgrid: false,
+        zeroline: false,
+        showline: false,
+        autotick: false,
+        ticks: '',
+        showticklabels: false
+    },
+    shapes: [{
+        type: 'circle',
+        x0: 0,
+        y0: 0,
+        x1: 29,
+        y1: 29,
+        opacity: 1,
+        fillcolor: 'none',
+        line: {
+            color: 'black',
+            width: 0.5
+        }
+    }]
+}
+
+var $warp_div = $('#map-warp');
+for(let i=0; i<100; i++) {
+    let innerDiv = document.createElement('div');
+    innerDiv.id = 'myDiv' + (i+1);
+    innerDiv.className = 'map';
+    $warp_div.append(innerDiv);
+    Plotly.newPlot('myDiv' + (i+1), data, layout, {displayModeBar: false});
+}
+
+$('div.map').hover(function() {
+    //$('map-view')
+    layout['width'] = 300;
+    layout['height'] = 300;
+    Plotly.newPlot('map-view', data, layout, {displayModeBar: false});
+});
+</script>
+</body>
+</html>
