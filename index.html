@@ -1,8 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
   <title>iMapViewer</title>
   <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/simple-sidebar.css">
   <script src="js/jquery-3.3.1.min.js"></script>
   <script src="js/bootstrap.min.js"></script>
   <script src="js/plotly-latest.min.js"></script>
@@ -12,8 +17,10 @@
   
   }
   #map-view {
+    /*
     position: absolute;
-    top: 400px;
+    top: 0px;
+    */
   }
   #map-warp svg {
     -webkit-clip-path: circle(30px at center);
@@ -33,18 +40,43 @@
     z-index: 999;
   }
   */
+  #menu-toggle {
+    position: absolute;
+    left: 0px;
+    top: 50%;
+    font-size: 10px;
+    margin: 0px;
+    padding: 0px;
+    opacity: 0;
+  }
+  #menu-toggle:hover {
+    opacity: 1;
+  }
   </style>
 </head>
 
 <body>
- 
-<div id="map-warp">
-</div>
 
-<div class="float-none"></div>
+    <div id="wrapper">
 
-<div id="map-view">
-</div>
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <div id="map-view"></div>
+            <h2 class="text-center">XXXX.XX</h2>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid" style="padding:0px">
+                <div id="map-warp"></div>
+                <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">>></a>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
 
 <script>
 var d3 = Plotly.d3;
@@ -135,7 +167,7 @@ var layout = {
 }
 
 var $warp_div = $('#map-warp');
-for(let i=0; i<100; i++) {
+for(let i=0; i<10; i++) {
     let innerDiv = document.createElement('div');
     innerDiv.id = 'myDiv' + (i+1);
     innerDiv.className = 'map';
@@ -148,6 +180,11 @@ $('div.map').hover(function() {
     layout['width'] = 300;
     layout['height'] = 300;
     Plotly.newPlot('map-view', data, layout, {displayModeBar: false});
+});
+
+$("#menu-toggle").click(function(e) {
+    e.preventDefault();
+    $("#wrapper").toggleClass("toggled");
 });
 </script>
 </body>
