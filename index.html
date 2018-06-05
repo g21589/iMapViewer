@@ -129,27 +129,19 @@ $(document).ready(function() {
 
     var data = [{
         z: z,
-        //x: x,
-        //y: y,
-        type: 'contour',
+        type: 'heatmap',
         showscale: false,
         connectgaps: true,
         zsmooth: 'best',
-        contours: {
-            coloring: 'heatmap'
-        },
         colorscale: [
             [0.0000, 'rgb(255,000,255)'],
-            [0.1333, 'rgb(128,000,255)'],
+            [0.1333, 'rgb(000,000,255)'],
             [0.3333, 'rgb(000,128,255)'],
             [0.5000, 'rgb(000,255,000)'],
             [0.6666, 'rgb(255,255,000)'],
             [0.8333, 'rgb(255,128,000)'],
             [1.0000, 'rgb(255,000,000)']
-        ],
-        line: {
-            width: 0
-        }
+        ]
     }];
 
     var layout = {
@@ -176,10 +168,10 @@ $(document).ready(function() {
         },
         shapes: [{
             type: 'circle',
-            x0: 0,
-            y0: 0,
-            x1: 29,
-            y1: 29,
+            x0: -0.5,
+            y0: -0.5,
+            x1: 29.5,
+            y1: 29.5,
             opacity: 1,
             fillcolor: 'none',
             line: {
