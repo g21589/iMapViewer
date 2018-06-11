@@ -22,13 +22,19 @@
     top: 0px;
     */
   }
+  /*
   #map-warp svg {
-    clip-path: circle(30px at center);
-    -webkit-clip-path: circle(30px at center);
+    clip-path: circle(50% at center);
+    -webkit-clip-path: circle(50% at center);
   }
   #map-view svg {
-    clip-path: circle(150px at center);
-    -webkit-clip-path: circle(150px at center);
+    clip-path: circle(50% at center);
+    -webkit-clip-path: circle(50% at center);
+  }
+  */
+  svg .heatmaplayer {
+    clip-path: circle(50% at center);
+    -webkit-clip-path: circle(50% at center);
   }
   div.map {
     float: left;
@@ -85,6 +91,7 @@
             
             <div class="container-fluid" style="padding:0px">
                 <div id="map-warp"></div>
+                <img id="jpg-export"></img>
                 <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">>></a>
             </div>
             
@@ -97,10 +104,11 @@
     <!-- /#wrapper -->
 
 <script>
+var d3 = Plotly.d3;
 $(document).ready(function() {
-
-    var d3 = Plotly.d3;
-
+    
+    var img_jpg= d3.select('#jpg-export');
+    
     var size = 30;
     var r = size / 2;
     var z = new Array(size);
@@ -126,31 +134,74 @@ $(document).ready(function() {
 
     var end = performance.now();
     console.log((end - start) + " ms");
-
+    
+    var color_scale = [
+        [0.0000, 'rgb(255,000,255)'],
+        [0.1333, 'rgb(000,000,255)'],
+        [0.3333, 'rgb(000,128,255)'],
+        [0.5000, 'rgb(000,255,000)'],
+        [0.6666, 'rgb(255,255,000)'],
+        [0.8333, 'rgb(255,128,000)'],
+        [1.0000, 'rgb(255,000,000)']
+    ]
+    
     var data = [{
         z: z,
+        xaxis: 'x1',
+        yaxis: 'y1',
         type: 'heatmap',
         showscale: false,
         connectgaps: true,
         zsmooth: 'best',
-        colorscale: [
-            [0.0000, 'rgb(255,000,255)'],
-            [0.1333, 'rgb(000,000,255)'],
-            [0.3333, 'rgb(000,128,255)'],
-            [0.5000, 'rgb(000,255,000)'],
-            [0.6666, 'rgb(255,255,000)'],
-            [0.8333, 'rgb(255,128,000)'],
-            [1.0000, 'rgb(255,000,000)']
-        ]
+        xgap: 0,
+        ygap: 0,
+        colorscale: color_scale
+    },{
+        z: z,
+        xaxis: 'x2',
+        yaxis: 'y2',
+        type: 'heatmap',
+        showscale: false,
+        connectgaps: true,
+        zsmooth: 'best',
+        xgap: 0,
+        ygap: 0,
+        colorscale: color_scale
+    },{
+        z: z,
+        xaxis: 'x3',
+        yaxis: 'y3',
+        type: 'heatmap',
+        showscale: false,
+        connectgaps: true,
+        zsmooth: 'best',
+        xgap: 0,
+        ygap: 0,
+        colorscale: color_scale
+    },{
+        z: z,
+        xaxis: 'x4',
+        yaxis: 'y4',
+        type: 'heatmap',
+        showscale: false,
+        connectgaps: true,
+        zsmooth: 'best',
+        xgap: 0,
+        ygap: 0,
+        colorscale: color_scale
     }];
 
     var layout = {
-        width: 60,
-        height: 60,
+        width: 200,
+        height: 200,
         margin: {
-            l: 0, r: 0, t: 0, b: 0
+            l: 0, r: 0, t: 0, b: 0, pad: 0
         },
+        rows: 2,
+        columns: 10,
         xaxis: {
+            domain: [0.5, 1],
+            anchor: 'x1',
             showgrid: false,
             zeroline: false,
             showline: false,
@@ -159,6 +210,8 @@ $(document).ready(function() {
             showticklabels: false
         },
         yaxis: {
+            domain: [0, 0.5],
+            anchor: 'y1',
             showgrid: false,
             zeroline: false,
             showline: false,
@@ -166,6 +219,67 @@ $(document).ready(function() {
             ticks: '',
             showticklabels: false
         },
+        xaxis2: {
+            domain: [0.5, 1],
+            anchor: 'x2',
+            showgrid: false,
+            zeroline: false,
+            showline: false,
+            autotick: false,
+            ticks: '',
+            showticklabels: false
+        },
+        yaxis2: {
+            domain: [0.5, 1],
+            anchor: 'y2',
+            showgrid: false,
+            zeroline: false,
+            showline: false,
+            autotick: false,
+            ticks: '',
+            showticklabels: false
+        },
+        xaxis3: {
+            domain: [0, 0.5],
+            anchor: 'x3',
+            showgrid: false,
+            zeroline: false,
+            showline: false,
+            autotick: false,
+            ticks: '',
+            showticklabels: false
+        },
+        yaxis3: {
+            domain: [0, 0.5],
+            anchor: 'y3',
+            showgrid: false,
+            zeroline: false,
+            showline: false,
+            autotick: false,
+            ticks: '',
+            showticklabels: false
+        },
+        xaxis4: {
+            domain: [0, 0.5],
+            anchor: 'x4',
+            showgrid: false,
+            zeroline: false,
+            showline: false,
+            autotick: false,
+            ticks: '',
+            showticklabels: false
+        },
+        yaxis4: {
+            domain: [0.5, 1],
+            anchor: 'y4',
+            showgrid: false,
+            zeroline: false,
+            showline: false,
+            autotick: false,
+            ticks: '',
+            showticklabels: false
+        },
+        /*
         shapes: [{
             type: 'circle',
             x0: -0.5,
@@ -179,6 +293,7 @@ $(document).ready(function() {
                 width: 0.5
             }
         }]
+        */
     }
 
     var config = {
@@ -194,7 +309,14 @@ $(document).ready(function() {
         innerDiv.id = 'myDiv' + (i+1);
         innerDiv.className = 'map';
         $warp_div.append(innerDiv);
-        Plotly.react('myDiv' + (i+1), data, layout, config);
+        Plotly.react('myDiv' + (i+1), data, layout, config)
+            .then(function(gd) {
+                Plotly.toImage(gd,{height:300,width:300}).then(function(url) {
+                    img_jpg.attr("src", url);
+                    return Plotly.toImage(gd,{format:'jpeg',height:400,width:400});
+                })
+            }
+        );
     }
 
     async function asyncPlot(i) {
@@ -206,7 +328,7 @@ $(document).ready(function() {
     }
     
     var start = performance.now();
-    for(let i=0; i<100; i++) {
+    for(let i=0; i<1; i++) {
         //setTimeout(function() {
             //asyncPlot(i);
             syncPlot(i);
