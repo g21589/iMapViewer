@@ -11,6 +11,9 @@
 <script src="js/jquery-3.3.1.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/plotly-latest.min.js"></script>
+<script src="js/web-animations.min.js"></script>
+<script src="js/hammer.min.js"></script>
+<script src="js/muuri.min.js"></script>
 <!--script src="js/plotly-gl2d-latest.min.js"></script-->
 <style>
   #map-warp {
@@ -22,19 +25,24 @@
     top: 0px;
     */
   }
-  #map-warp svg {
-    clip-path: circle(30px at center);
-    -webkit-clip-path: circle(30px at center);
+  #map-warp svg:first-child, #map-warp svg .plot .heatmaplayer image {
+    clip-path: circle(50% at center);
+    -webkit-clip-path: circle(50% at center);
   }
-  #map-view svg {
-    clip-path: circle(150px at center);
-    -webkit-clip-path: circle(150px at center);
+  #map-view svg:first-child, #map-view svg .plot .heatmaplayer image {
+    clip-path: circle(50% at center);
+    -webkit-clip-path: circle(50% at center);
   }
   div.map {
-    float: left;
     -webkit-transition: 0.2s;
     transition: 0.2s;
     z-index: 0;
+  }
+  div.map:hover {
+    background-color: #EEE;
+  }
+  svg:hover .annotation {
+    transform: scale(2);
   }
   /*
   div.map:hover {
@@ -50,6 +58,7 @@
     margin: 0px;
     padding: 0px;
     opacity: 0;
+    z-index: 999;
   }
   #menu-toggle:hover {
     opacity: 1;
@@ -65,7 +74,32 @@
   @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
-  } 
+  }
+  .grid {
+    position: relative;
+  }
+  .item {
+    display: block;
+    position: absolute;
+    width: 80px;
+    height: 80px;
+    margin: 0px;
+    z-index: 1;
+  }
+  .item.muuri-item-dragging {
+    z-index: 3;
+  }
+  .item.muuri-item-releasing {
+    z-index: 2;
+  }
+  .item.muuri-item-hidden {
+    z-index: 0;
+  }
+  .item-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
 </style>
 </head>
 
@@ -84,7 +118,7 @@
         <div id="page-content-wrapper">
             
             <div class="container-fluid" style="padding:0px">
-                <div id="map-warp"></div>
+                <div id="map-warp" class="grid"></div>
                 <a href="#menu-toggle" class="btn btn-secondary" id="menu-toggle">>></a>
             </div>
             
@@ -135,7 +169,7 @@ $(document).ready(function() {
         zsmooth: 'best',
         colorscale: [
             [0.0000, 'rgb(255,000,255)'],
-            [0.1333, 'rgb(000,000,255)'],
+            [0.1333, 'rgb(128,000,255)'],
             [0.3333, 'rgb(000,128,255)'],
             [0.5000, 'rgb(000,255,000)'],
             [0.6666, 'rgb(255,255,000)'],
@@ -145,8 +179,8 @@ $(document).ready(function() {
     }];
 
     var layout = {
-        width: 60,
-        height: 60,
+        width: 80,
+        height: 80,
         margin: {
             l: 0, r: 0, t: 0, b: 0
         },
@@ -178,6 +212,49 @@ $(document).ready(function() {
                 color: 'black',
                 width: 0.5
             }
+        }],
+        annotations: [{
+            x: 5,
+            y: 15,
+            xref: 'x',
+            yref: 'y',
+            text: '123',
+            font: {
+                family: 'Courier New, monospace',
+                size: 8,
+                color: '#000'
+            },
+            bgcolor: 'rgba(255, 255, 255, 0.75)',
+            borderwidth: 1,
+            borderpad: 0.5,
+            showarrow: true,
+            arrowhead: 3,
+            arrowsize: 1,
+            arrowwidth: 1,
+            arrowcolor: '#000',
+            ax: 12,
+            ay: -12
+        }, {
+            x: 15,
+            y: 15,
+            xref: 'x',
+            yref: 'y',
+            text: '456',
+            font: {
+                family: 'Courier New, monospace',
+                size: 8,
+                color: '#000'
+            },
+            bgcolor: 'rgba(255, 255, 255, 0.75)',
+            borderwidth: 1,
+            borderpad: 0.5,
+            showarrow: true,
+            arrowhead: 3,
+            arrowsize: 1,
+            arrowwidth: 1,
+            arrowcolor: '#000',
+            ax: 12,
+            ay: -12
         }]
     }
 
@@ -190,10 +267,7 @@ $(document).ready(function() {
     var $warp_div = $('#map-warp');
 
     function syncPlot(i) {
-        let innerDiv = document.createElement('div');
-        innerDiv.id = 'myDiv' + (i+1);
-        innerDiv.className = 'map';
-        $warp_div.append(innerDiv);
+        $warp_div.append("<div class='item'><div class='item-content'><div id='myDiv" + (i+1) + "' class='map'></div></div></div>");
         Plotly.react('myDiv' + (i+1), data, layout, config);
     }
 
@@ -225,6 +299,15 @@ $(document).ready(function() {
     $("#menu-toggle").click(function(e) {
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
+    });
+    
+    var grid = new Muuri('.grid', {
+        dragEnabled: true,
+        layoutDuration: 300,
+        layoutEasing: 'ease',
+        dragReleaseDuration: 300,
+        dragReleaseEasing: 'ease',
+        dragSortInterval: 0
     });
 });
 </script>
